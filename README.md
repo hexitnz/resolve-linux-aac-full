@@ -14,6 +14,7 @@ This is a compiled build based on the `resolve-21.1.1` branch from the [AquaroTo
    ```bash
    sudo cp -r aac_decoder_probe.dvcp.bundle /opt/resolve/IOPlugins/
    sudo cp -r aac_fdk_plugin.dvcp.bundle /opt/resolve/IOPlugins/
+
 4.Relaunch Resolve.
 
 5. You can verify the decoder is working by running Resolve from the terminal with RESOLVE_AAC_LOG=1 resolve. If it says AAC bridge active (memory only), it is working!
