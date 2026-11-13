@@ -18,3 +18,5 @@ This is a compiled build based on the `resolve-21.1.1` branch from the [AquaroTo
 4.Relaunch Resolve.
 
 5. You can verify the decoder is working by running Resolve from the terminal with RESOLVE_AAC_LOG=1 resolve. If it says AAC bridge active (memory only), it is working!
+
+Note: These plugins hook into Resolve's memory and do not modify your actual Resolve application files. Because they rely on matching specific machine code, they are version-specific. They are tested on 21.1.1 and 21.2.0.0006. If you upgrade Resolve in the future, they may stop working until the signatures are updated.
