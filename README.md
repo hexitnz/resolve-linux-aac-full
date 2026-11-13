@@ -1,5 +1,10 @@
 # DaVinci Resolve Linux AAC Fix (21.1.1 / 21.2.0)
 
+Please wait till i update these files to work correctly on most flavours of Linux.  Should have the update done later today so by 1200UTC 14/11/26.
+
+
+
+
 This repository provides pre-compiled AAC decoder and encoder plugins for **DaVinci Resolve Studio on Linux x86-64**. 
 
 If Resolve is failing to import AAC audio, or if you want to export using FDK-AAC, these plugins fix the issue. 
