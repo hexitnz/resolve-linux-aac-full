@@ -71,4 +71,7 @@ This will remove the new plugins and automatically restore any previous plugins 
 ## Credits & Acknowledgments
 This project would not be possible without the incredible work of the open-source community:
 * **[GloriousEggroll](https://github.com/GloriousEggroll/dvcp-aac)** - For creating the original `dvcp-aac` project, the in-memory bridge, and the FDK-AAC encoder plugin.
-* **[AquaroTorres](https://github.com/AquaroTorres/dvcp-aac)** - For creating the `resolve-21.1.1` branch, which updated the binary signatures and made the bridge work on Resolve 21.1 and 21.2. 
+* **[AquaroTorres](https://github.com/AquaroTorres/dvcp-aac)** - For creating the `resolve-21.1.1` branch, which updated the binary signatures and made the bridge work on Resolve 21.1 and 21.2.
+
+## Note:
+I tried to share this on r/davinciresolve to help people, but their auto-moderator blocks standalone tool posts. If you found this via Google and it saved your project, feel free to drop the link in any Reddit thread where someone is asking for a Linux AAC fix!
