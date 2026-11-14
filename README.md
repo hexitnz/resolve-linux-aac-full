@@ -8,7 +8,7 @@ DaVinci Resolve Studio on Linux has historically lacked native AAC support. This
 1. **AAC Decoder (Import):** Allows you to import MP4/MOV/MKV files with AAC audio, generate waveforms, and play them back.
 2. **AAC Encoder (Export):** Allows you to export AAC audio (FDK-AAC) directly from the Deliver page.
 
-This is a compiled build based on the `resolve-21.1.1` branch from the [AquaroTorres/dvcp-aac](https://github.com/AquaroTorres/dvcp-aac) project. (Special thanks to GloriousEggroll for the original bridge and AquaroTorres for the updated signatures).
+This is a compiled build based on the `resolve-21.1.1` branch from the [AquaroTorres/dvcp-aac](https://github.com/AquaroTorres/dvcp-aac) project. 
 
 ## Compatibility
 * **Important Requirement:** This plugin requires **DaVinci Resolve Studio** (the paid version). It will **not work** on the free version of DaVinci Resolve, as the free version does not support loading custom IOPlugins.
@@ -67,3 +67,8 @@ If you used the automated script, you can safely undo the installation at any ti
 sudo python3 install.py uninstall --root /opt/resolve
 ```
 This will remove the new plugins and automatically restore any previous plugins you had installed.
+
+## Credits & Acknowledgments
+This project would not be possible without the incredible work of the open-source community:
+* **[GloriousEggroll](https://github.com/GloriousEggroll/dvcp-aac)** - For creating the original `dvcp-aac` project, the in-memory bridge, and the FDK-AAC encoder plugin.
+* **[AquaroTorres](https://github.com/AquaroTorres/dvcp-aac)** - For creating the `resolve-21.1.1` branch, which updated the binary signatures and made the bridge work on Resolve 21.1 and 21.2. 
