@@ -17,7 +17,7 @@ This is a compiled build based on the `resolve-21.1.1` branch from the [AquaroTo
   * Debian 10+
   * Fedora 29+
   * Arch Linux, openSUSE, etc.
-* **Tested Environment:** Linux Mint 22.x, DaVinci Resolve Studio 21.2.6. Exported files were verified playing back correctly in VLC 3.0.20.
+* **Tested Environment:** Linux Mint 22.2, DaVinci Resolve Studio 21.2.6. Exported files were verified playing back correctly in VLC 3.0.20.
 
 ## Installation
 
@@ -30,3 +30,33 @@ You can install this using the automated script (recommended) or manually copyin
 4. Run the installer (you will need `sudo` to write to the Resolve directory):
    ```bash
    sudo python3 install.py install --root /opt/resolve
+   ```
+   *(This script will automatically back up your old plugins, verify the signatures match your Resolve version, and safely install the new ones).*
+5. Relaunch Resolve.
+
+### Method 2: Manual Installation
+1. Download the `.zip` file from the **Releases** section and extract it.
+2. **Fully quit DaVinci Resolve.**
+3. Copy the two extracted `.dvcp.bundle` folders into Resolve's plugin directory:
+   ```bash
+   sudo cp -r aac_decoder_probe.dvcp.bundle /opt/resolve/IOPlugins/
+   sudo cp -r aac_fdk_plugin.dvcp.bundle /opt/resolve/IOPlugins/
+   ```
+4. Relaunch Resolve.
+
+## How to verify it is working
+If you want to confirm the decoder is successfully hooked into Resolve, launch Resolve from the terminal with the diagnostic flag:
+```bash
+RESOLVE_AAC_LOG=1 /opt/resolve/bin/resolve
+```
+Look at the terminal output as Resolve starts. You should see:
+`AAC bridge active (memory only); application files unchanged.`
+
+If you see `AAC bridge inactive`, it means your specific Resolve build has different binary signatures and the plugin failed safely (it will not crash Resolve, it just won't work). 
+
+## Uninstalling / Rolling Back
+If you used the automated script, you can safely undo the installation at any time:
+```bash
+sudo python3 install.py uninstall --root /opt/resolve
+```
+This will remove the new plugins and automatically restore any previous plugins you had installed.
