@@ -52,14 +52,50 @@ You can install this using the automated script (recommended) or manually copyin
 4. Relaunch Resolve.
 
 ## How to verify it is working
-If you want to confirm the decoder is successfully hooked into Resolve, launch Resolve from the terminal with the diagnostic flag:
+If you want to confirm the plugins are successfully hooked into Resolve, launch Resolve from the terminal with the diagnostic flag:
 ```bash
 RESOLVE_AAC_LOG=1 /opt/resolve/bin/resolve
 ```
 Look at the terminal output as Resolve starts. You should see:
 `AAC bridge active (memory only); application files unchanged.`
 
-If you see `AAC bridge inactive`, it means your specific Resolve build has different binary signatures and the plugin failed safely (it will not crash Resolve, it just won't work). 
+For the encoder, open the Deliver page and ensure `AAC 2.0 (FDK-AAC)` appears in the Audio Codec dropdown.
+
+## Troubleshooting
+
+If audio is still not working after installation, it is usually because a plugin failed to load, or the binary signatures don't match your exact version of Resolve. Use the methods below to diagnose.
+
+**General Check: Ensure the Plugins are Executable**
+If you used the manual installation method, the files might not have execute permissions. Fix this by running:
+```bash
+sudo chmod +x /opt/resolve/IOPlugins/aac_decoder_probe.dvcp.bundle/Contents/Linux-x86-64/aac_decoder_probe.dvcp
+sudo chmod +x /opt/resolve/IOPlugins/aac_fdk_plugin.dvcp.bundle/Contents/Linux-x86-64/aac_fdk_plugin.dvcp
+```
+
+### Diagnosing Import (Decoding) Errors
+If you cannot import AAC files, see no waveforms, or get no playback audio:
+
+1. **Check the Plugin Log via Terminal**
+   Launch Resolve with the diagnostic flag:
+   ```bash
+   RESOLVE_AAC_LOG=1 /opt/resolve/bin/resolve
+   ```
+   *   Look for `AAC bridge active`. If you see this, the plugin is loaded.
+   *   Look for `AAC bridge inactive`. If you see this, your Resolve version has different binary signatures and the hook failed safely. You will need a newer version of this patch.
+   *   Look for `Plugin library failed to load`. This usually means a Linux dependency issue. Run this to check for missing libraries: `ldd /opt/resolve/IOPlugins/aac_decoder_probe.dvcp.bundle/Contents/Linux-x86-64/aac_decoder_probe.dvcp`
+
+### Diagnosing Export (Encoding) Errors
+If the `AAC 2.0 (FDK-AAC)` codec does not appear in the Deliver page, or rendering fails:
+
+1. **Check the Resolve Debug Log**
+   Resolve keeps a log of all loaded plugins during startup. 
+   1. Close Resolve.
+   2. Open a terminal and search the Resolve log for the encoder plugin:
+   ```bash
+   grep -i "aac_fdk\|IOPlugins" ~/.local/share/DaVinciResolve/logs/ResolveDebug.txt | tail -n 30
+   ```
+   *   **Success:** You should see lines indicating `aac_fdk_plugin.dvcp` was loaded successfully.
+   *   **Failure:** If you see `Plugin library failed to load for .../aac_fdk_plugin.dvcp`, it means Resolve rejected the encoder (usually due to missing system libraries or a glibc mismatch).
 
 ## Uninstalling / Rolling Back
 If you used the automated script, you can safely undo the installation at any time (remember to use `sudo`):
@@ -71,7 +107,4 @@ This will remove the new plugins and automatically restore any previous plugins 
 ## Credits & Acknowledgments
 This project would not be possible without the incredible work of the open-source community:
 * **[GloriousEggroll](https://github.com/GloriousEggroll/dvcp-aac)** - For creating the original `dvcp-aac` project, the in-memory bridge, and the FDK-AAC encoder plugin.
-* **[AquaroTorres](https://github.com/AquaroTorres/dvcp-aac)** - For creating the `resolve-21.1.1` branch, which updated the binary signatures and made the bridge work on Resolve 21.1 and 21.2.
-
-## Note:
-I tried to share this on r/davinciresolve to help people, but their auto-moderator blocks standalone tool posts. If you found this via Google and it saved your project, feel free to drop the link in any Reddit thread where someone is asking for a Linux AAC fix!
+* **[AquaroTorres](https://github.com/AquaroTorres/dvcp-aac)** - For creating the `resolve-21.1.1` branch, which updated the binary signatures and made the bridge work on Resolve 21.1 and 21.2. 
