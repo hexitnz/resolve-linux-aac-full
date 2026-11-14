@@ -17,6 +17,7 @@ This is a compiled build based on the `resolve-21.1.1` branch from the [AquaroTo
   * Debian 10+
   * Fedora 29+
   * Arch Linux, openSUSE, etc.
+  * I will try and keep this updated as new Resolve versions are released and tested but no promises!
 * **Tested Environment:** Linux Mint 22.2, DaVinci Resolve Studio 21.2.6. Exported files were verified playing back correctly in VLC 3.0.20.
 
 ## Installation
