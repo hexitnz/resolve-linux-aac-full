@@ -11,31 +11,30 @@ DaVinci Resolve Studio on Linux has historically lacked native AAC support. This
 This is a compiled build based on the `resolve-21.1.1` branch from the [AquaroTorres/dvcp-aac](https://github.com/AquaroTorres/dvcp-aac) project. (Special thanks to GloriousEggroll for the original bridge and AquaroTorres for the updated signatures).
 
 ## Compatibility
+* **Important Requirement:** This plugin requires **DaVinci Resolve Studio** (the paid version). It will **not work** on the free version of DaVinci Resolve, as the free version does not support loading custom IOPlugins.
 * **DaVinci Resolve:** Tested and working on **Resolve Studio 21.2.6** (Build 6). It should also work on 21.1.1. *Because these plugins hook into Resolve's memory, they are highly version-specific. Future Resolve updates may require new signatures.*
 * **Linux Distributions:** These binaries were compiled inside a **Rocky Linux 8** container. This means they require `GLIBC 2.28` or newer. They will work on almost all modern Linux distributions, including:
   * Linux Mint 20+ / Ubuntu 20.04+
   * Debian 10+
   * Fedora 29+
   * Arch Linux, openSUSE, etc.
-* **Important Requirment:** This plugin requires DaVinci Resolve Studio (the paid version). It will not work on the free version of DaVinci Resolve, as the free version does not support IOPlugins.
 * **Updates:** I will try and keep this updated as new Resolve versions are released and tested but no promises!
 * **Tested Environment for import export MP4 H264/AAC:**
-  * DaVinci Resolve linux Studio 21.2.6
-  * Linux Mint 22.2
-  * Kubuntu 26.04 LTS
-  * **Players:**
-  *  VLC 3.0.20
-  *  Haruna media player KDE.
+  * **OS:** Linux Mint 22.2, Kubuntu 26.04 LTS
+  * **Resolve:** DaVinci Resolve Studio 21.2.6 (Linux)
+  * **Players:** VLC 3.0.20, Haruna media player KDE.
 
 ## Installation
 
-You can install this using the automated script (recommended) or manually copying the files.
+You can install this using the automated script (recommended) or manually copying the files. 
+
+*Note: Both methods require root permissions (`sudo`) because you are writing to the `/opt/resolve` system directory.*
 
 ### Method 1: Automated Script (Recommended)
 1. Download the `.zip` file from the **Releases** section and extract it.
 2. Open a terminal in the extracted folder.
 3. **Fully quit DaVinci Resolve.**
-4. Run the installer (you will need `sudo` to write to the Resolve directory):
+4. Run the installer:
    ```bash
    sudo python3 install.py install --root /opt/resolve
    ```
@@ -63,7 +62,7 @@ Look at the terminal output as Resolve starts. You should see:
 If you see `AAC bridge inactive`, it means your specific Resolve build has different binary signatures and the plugin failed safely (it will not crash Resolve, it just won't work). 
 
 ## Uninstalling / Rolling Back
-If you used the automated script, you can safely undo the installation at any time:
+If you used the automated script, you can safely undo the installation at any time (remember to use `sudo`):
 ```bash
 sudo python3 install.py uninstall --root /opt/resolve
 ```
