@@ -21,14 +21,22 @@ strip --strip-unneeded /export/aac_decoder_probe.dvcp.bundle/Contents/Linux-x86-
 strip --strip-unneeded /export/tools/check-resolve
 if [ "${AAC_WITH_ENCODER:-0}" = 1 ]; then
     printf '==> Building the optional AAC export plugin\n'
-    (cd /work/encoder && patch -p1 < /source/packaging/encoder-esds.patch)
+
+    # Apply the ESDS patch directly to our merged src folder
+    #(cd /source && patch -p1 < packaging/encoder-esds.patch)
+
     mkdir -p /export/aac_fdk_plugin.dvcp.bundle/Contents/Linux-x86-64
-    (cd /work/encoder/src && g++ -std=c++11 -O2 -fPIC -shared -I. -Iinclude -I/work/fdk-install/include \
+
+    # Compile the encoder
+    (cd /source/src && g++ -std=c++11 -O2 -fPIC -shared \
+      -I. -Iinclude -I/sdk/include -I/sdk/wrapper -I/work/fdk-install/include \
       plugin.cpp aac_encoder.cpp wrapper/host_api.cpp wrapper/plugin_api.cpp \
       /work/fdk-install/lib/libfdk-aac.a -Wl,-z,defs -lpthread -lm \
       -o /export/aac_fdk_plugin.dvcp.bundle/Contents/Linux-x86-64/aac_fdk_plugin.dvcp)
+
     strip --strip-unneeded /export/aac_fdk_plugin.dvcp.bundle/Contents/Linux-x86-64/aac_fdk_plugin.dvcp
-    cp /work/encoder/LICENSE /export/licenses/aac-encoder.txt
+
+    cp /source/licenses/aac-encoder.txt /export/licenses/ || true
     cp /source/packaging/encoder-esds.patch /export/third-party-source/
 fi
 cp /work/fdk/NOTICE /export/licenses/fdk-aac.txt
