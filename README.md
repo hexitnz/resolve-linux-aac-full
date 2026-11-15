@@ -36,6 +36,42 @@ Relaunch Resolve. The installer preserves earlier copies and supports `python3 i
 
 `tools/check-resolve /opt/resolve/bin/resolve --test` additionally checks that the scanner rejects changed instructions, duplicate signatures, and incorrect RTTI, and can find synthetically relocated code. It does not modify the file.
 
+## Troubleshooting
+
+If audio is still not working after installation, it is usually because a plugin failed to load, or the binary signatures don't match your exact version of Resolve. Use the methods below to diagnose.
+
+**General Check: Ensure the Plugins are Executable**
+If you used the manual installation method, the files might not have execute permissions. Fix this by running:
+```bash
+sudo chmod +x /opt/resolve/IOPlugins/aac_decoder_probe.dvcp.bundle/Contents/Linux-x86-64/aac_decoder_probe.dvcp
+sudo chmod +x /opt/resolve/IOPlugins/aac_fdk_plugin.dvcp.bundle/Contents/Linux-x86-64/aac_fdk_plugin.dvcp
+```
+
+### Diagnosing Import (Decoding) Errors
+If you cannot import AAC files, see no waveforms, or get no playback audio:
+
+1. **Check the Plugin Log via Terminal**
+   Launch Resolve with the diagnostic flag:
+   ```bash
+   RESOLVE_AAC_LOG=1 /opt/resolve/bin/resolve
+   ```
+   *   Look for `AAC bridge active`. If you see this, the plugin is loaded.
+   *   Look for `AAC bridge inactive`. If you see this, your Resolve version has different binary signatures and the hook failed safely. You will need a newer version of this patch.
+   *   Look for `Plugin library failed to load`. This usually means a Linux dependency issue. Run this to check for missing libraries: `ldd /opt/resolve/IOPlugins/aac_decoder_probe.dvcp.bundle/Contents/Linux-x86-64/aac_decoder_probe.dvcp`
+
+### Diagnosing Export (Encoding) Errors
+If the `AAC 2.0 (FDK-AAC)` codec does not appear in the Deliver page, or rendering fails:
+
+1. **Check the Resolve Debug Log**
+   Resolve keeps a log of all loaded plugins during startup. 
+   1. Close Resolve.
+   2. Open a terminal and search the Resolve log for the encoder plugin:
+   ```bash
+   grep -i "aac_fdk\|IOPlugins" ~/.local/share/DaVinciResolve/logs/ResolveDebug.txt | tail -n 30
+   ```
+   *   **Success:** You should see lines indicating `aac_fdk_plugin.dvcp` was loaded successfully.
+   *   **Failure:** If you see `Plugin library failed to load for .../aac_fdk_plugin.dvcp`, it means Resolve rejected the encoder (usually due to missing system libraries or a glibc mismatch).
+
 ## Compatibility and current limits
 
 Validated locally with Studio **21.0.4.0005**, **21.1.1.0010**, and **21.2.6 (Build 6) on Linux x86-64**. 
