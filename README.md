@@ -72,12 +72,10 @@ If the `AAC 2.0 (FDK-AAC)` codec does not appear in the Deliver page, or renderi
    *   **Success:** You should see lines indicating `aac_fdk_plugin.dvcp` was loaded successfully.
    *   **Failure:** If you see `Plugin library failed to load for .../aac_fdk_plugin.dvcp`, it means Resolve rejected the encoder (usually due to missing system libraries or a glibc mismatch).
 
-## Known Conflicts (Third-Party Video Plugins)
-If your export is silent when using this AAC encoder, **check if you are using a third-party video encoder plugin simultaneously**. 
+## Encoder Stream Mode (ADTS)
+This build uses **ADTS** (Audio Data Transport Stream) for the encoder output, rather than RAW AAC frames. 
 
-For example, if you use a custom FFmpeg plugin to render H.264/H.265/AV1 on an AMD GPU, Resolve's internal muxer often fails to stitch the custom video stream and the custom AAC audio stream together into a single MP4 container. The audio data is encoded correctly, but the muxer drops it. This also occurs with system `libfdk AAC` encoders when a third-party video plugin is active. 
-
-**Workaround:** If you must use a third-party video plugin, you may need to render with PCM audio and use a separate remuxing step, or stick to Resolve's native video codecs for exports where you need AAC audio. The **import** (decoder) plugin is unaffected and will continue to work perfectly for AAC playback.
+If you use a third-party video encoder plugin (such as an AMD GPU FFmpeg plugin), Resolve's internal muxer can fail to write the audio metadata correctly, resulting in silent MP4 exports. Using ADTS wraps every audio frame in a self-describing header, bypassing Resolve's muxer issues and ensuring the audio plays correctly regardless of the video plugin used. There are no significant downsides to this; it just adds a few bytes of per-frame overhead.
 
 ## Compatibility and current limits
 
@@ -96,7 +94,7 @@ PCM is converted from the native plugin host's integer format to the float forma
 ## Source layout
 
 *   `src/decoder.cpp`: codec registration, AAC configuration, decoding and PCM output.
-*   `src/aac_encoder.cpp`: FDK-AAC encoder implementation with ESDS metadata patch.
+*   `src/aac_encoder.cpp`: FDK-AAC encoder implementation with ESDS metadata patch (using ADTS transmux).
 *   `src/bridge.cpp`, `bridge.S`, `bridge.h`: validated memory hook and PCM adapter.
 *   `src/aac_config.h`: bounded MKV AAC metadata parser.
 *   `src/diagnostics.h`: optional logging via `RESOLVE_AAC_LOG`.
