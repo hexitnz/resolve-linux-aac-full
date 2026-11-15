@@ -415,7 +415,7 @@ StatusCode AACEncoder::DoOpen(HostBufferRef* p_pBuff)
         return errFail;
     }
 
-    paramErr = aacEncoder_SetParam(m_hEncoder, AACENC_TRANSMUX, TT_MP4_RAW);
+        paramErr = aacEncoder_SetParam(m_hEncoder, AACENC_TRANSMUX, TT_MP4_ADTS);
     if (paramErr != AACENC_OK)
     {
         g_Log(logLevelError, "AAC Plugin :: Failed to set transmux (err %d)", paramErr);
